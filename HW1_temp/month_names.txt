@@ -1,0 +1,17 @@
+language	m1	m2	m3	m4	m5	m6	m7	m8	m9	m10	m11	m12
+English	January	February	March	April	May	June	July	August	September	October	November	December
+Czech	leden	únor	březen	duben	květen	červen	červenec	srpen	září	říjen	listopad	prosinec
+Danish	januar	februar	marts	april	maj	juni	juli	august	september	oktober	november	december
+Dutch	januari	februari	maart	april	mei	juni	juli	augustus	september	oktober	november	december
+Finnish	tammikuu	helmikuu	maaliskuu	huhtikuu	toukokuu	kesäkuu	heinäkuu	elokuu	syyskuu	lokakuu	marraskuu	joulukuu
+French	janvier	février	mars	avril	mai	juin	juillet	août	septembre	octobre	novembre	décembre
+German	Januar	Februar	März	April	Mai	Juni	Juli	August	September	Oktober	November	Dezember
+Hungarian	január	február	március	április	május	június	július	augusztus	szeptember	október	november	december
+Icelandic	janúar	febrúar	mars	apríl	maí	júní	júlí	ágúst	september	október	nóvember	desember
+Italian	gennaio	febbraio	marzo	aprile	maggio	giugno	luglio	agosto	settembre	ottobre	novembre	dicembre
+Norwegian	januar	februar	mars	april	mai	juni	juli	august	september	oktober	november	desember
+Polish	styczeń	luty	marzec	kwiecień	maj	czerwiec	lipiec	sierpień	wrzesień	październik	listopad	grudzień
+Portuguese	janeiro	fevereiro	março	abril	maio	junho	julho	agosto	setembro	outubro	novembro	dezembro
+Spanish	enero	febrero	marzo	abril	mayo	junio	julio	agosto	septiembre	octubre	noviembre	diciembre
+Swedish	januari	februari	mars	april	maj	juni	juli	augusti	september	oktober	november	december
+Turkish	ocak	şubat	mart	nisan	mayis	haziran	temmuz	ağustos	eylül	ekim	kasım	aralık

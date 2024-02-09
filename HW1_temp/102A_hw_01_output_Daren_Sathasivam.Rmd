@@ -1,0 +1,264 @@
+---
+title: "Stats 102A - Homework 1 - Output File"
+author: "Daren Sathasivam"
+output: pdf_document
+---
+
+Copyright Miles Chen, Do not post, share, or distribute without permission.
+
+To receive full credit the functions you write must pass all tests. We may conduct further tests that are not included on this page as well.
+
+# Academic Integrity Statement
+
+By including this statement, I, **Daren Sathasivam**, declare that all of the work in this assignment is my own original work. At no time did I look at the code of other students nor did I search for code solutions online. I understand that plagiarism on any single part of this assignment will result in a 0 for the entire assignment and that I will be referred to the dean of students.
+
+
+```{r, error = TRUE}
+source("102A_hw_01_script_Daren_Sathasivam.R")  # edit with your file name
+```
+
+# Part 1: Tests for `by_type()`
+
+Do not edit any of the code in this section. The code here will run test cases to test if your function is working properly.
+
+```{r, error = TRUE}
+x <- c("a", "1", "2.2", "house", "3.4", "6")
+by_type(x)
+```
+
+```{r, error = TRUE}
+# 10 * 0.3 is 3. There are two instances of 3
+# Both instances of 3 will be classified as an integer. 
+set.seed(1)
+x <- sample(c(1:10, (1:10)*0.3, letters[1:10]))
+by_type(x)
+by_type(x, sort = TRUE)
+```
+
+```{r, error = TRUE}
+x <- 10:1
+by_type(x, sort = TRUE)
+
+x <- logical(5)
+by_type(x)
+
+# values 1.0, 2.0, 3.0, etc. are classified as integers.
+x <- seq(0, 4, by = 0.2)
+by_type(x)
+
+x <- c(seq(0, 4, by = 0.2), NA, "a", "d")
+by_type(x, sort = TRUE)
+```
+
+
+# Part 2: Tests for `prime_factor()`
+
+This section will print out a bunch of test cases to see if your `prime_factor()` function is working properly. Do not edit the following code which runs tests.
+
+```{r, error = TRUE}
+# a helper function for testing if a value x is prime.
+is_prime <- function(x){
+  if(!is.numeric(x)){ 
+    stop("Input must be numeric") 
+  }
+  if(length(x) != 1){
+    stop("Input must have length of 1")
+  }
+  if(as.integer(x) != x){ # non-integer values are not prime
+    return(FALSE)
+  }
+  if(x <= 1){ # negative numbers, 0, and 1 are all non-prime
+    return(FALSE)
+  }
+  if(x == 2){ # special case for 2
+    return(TRUE)
+  }
+  # we only need to check for prime factors less than sqrt(x)
+  max <- ceiling(sqrt(x))
+  for(i in 2:max){
+    if(x %% i == 0){ # if the values divides evenly, it is not prime
+      return(FALSE)
+    }
+  }
+  TRUE
+}
+```
+
+
+```{r, error = TRUE}
+prime_factor(0)
+prime_factor(1)
+prime_factor(2.2)
+
+for(x in c(2:50, 2001:2050)){
+  factors <- prime_factor(x)
+  cat(x, "has prime factors:", factors, "\n")
+  if(!all(sapply(factors, is_prime))){
+    cat("Problem: not all factors found are prime.\n")
+  }
+  if(prod(factors) != x){
+    cat("Problem: the product of factors does not equal x.\n")
+  }
+}
+
+```
+
+# Part 3: Tests for `month_convert()`
+
+Do not edit the following code which runs tests.
+
+```{r, error = TRUE}
+month_names <- read.delim("month_names.txt", encoding="UTF-8", row.names=1)
+
+x <- factor(c("March", "March", "February", "June"))
+month_convert(x, "English", "Spanish")
+
+x <- factor(c("March", "March", "February", "June", "Jaly", "Hamburger", "December"))
+month_convert(x, "English", "German")
+
+x <- factor(c("gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio",
+              "agosto", "settembre", "ottobre", "novembre", "dicembre"))
+month_convert(x, "Italian", "English")
+
+x <- factor(c("janeiro", "março", "abril", "maio", "junho", "julho", "maio", "setembro", 
+              "outubro", "novembro", "dezembro", "setembro", "setembro", "março"))
+y <- month_convert(x, "Portuguese", "French")
+print(y)
+y <- month_convert(y, "French", "Danish")
+print(y)
+y <- month_convert(y, "Danish", "Dutch")
+print(y)
+y <- month_convert(y, "Dutch", "Icelandic")
+print(y)
+```
+
+# Part 4: Questions to Answer
+
+Replace 'write your answer here' with your responses. Be sure your answers have been 'highlighted' using the triple hash `###` which makes the text large and bold.
+
+1. Coercion: For each of the following, explain what type of output you will receive and why R is producing that output.
+    a. `c(0, TRUE)`
+    b. `c("F", F)`
+    c. `c(list(1), "b")`
+    d. `c(FALSE, 1L)`
+
+### a. will be of type double because 0 is type double and it will coerece the TRUE to type double.
+
+### b. Will be coerced into the character type because "F" is type character and it will coerce the logical type F to character type.
+
+### c. Will be coerced into type list because list(1) will coerce the character type "b" into list by adding the character into the list as an element.
+
+### d. Will be coerced into type integer because 1L is type integer and will coerce logical type FALSE to integer type as it becomes 0.
+
+
+
+2. What is the difference between NULL, NA, and NaN?
+
+### All of these special values have different meanings and uses according to situations. NULL refers to an empty or nonexistent value and it is its own type. NA refers to missing or unknown values and are present for each data type. NaN refers to inderteminant forms in mathematics(such as 0/0) and is of type double.
+
+
+
+3. What is the difference between logical(0) and NULL? Write a command (other than `logical(0)`) that will produce logical(0) as the output. Write a command (other than `NULL`) that will produce NULL as the output.
+
+### logical(0) represent an empty logical vector whereas NULL represents an absence of a value and can be used in functions to indicate the a lack of a meaningful result. 
+
+```{r}
+# For logical(0)
+as.logical(numeric(0))
+# For NULL
+as.null(numeric(0))
+```
+
+4. A vector `c(TRUE, FALSE)` is a logical vector. Other than `TRUE` or `FALSE`, what can you insert into the vector so that it increases to a length of 3 and remains a logical vector and does not get coerced into another class?
+
+### A user can insert a value of either T or F at the end as they represent TRUE and FALSE values. Additionally, NA can also be inserted and would represent an unknown value or NULL which is considered FALSE.
+```{r}
+# Ex.
+c(TRUE, FALSE, T, F, NA, NULL)
+```
+
+
+5. What are the lengths of the following lists? Use bracket notation to subset them to the equivalent of `c("h","i")`. Be sure to print the result so it shows the subset.
+
+```{r}
+l1 <- list(letters[1:5], letters[3:9] , letters[4:7])
+l1
+l1[[2]][c(6, 7)]
+
+l2 <- list( c(letters[1:5], letters[3:9]), letters[4:7] )
+l2
+l2[[1]][c(11, 12)]
+```
+### The length of list 1 is 3. The length of list 2 is 2. In list 3, there are three components whereas list 2 combines the character vector resulting in two components instead of three.
+
+
+6. What will `c(4:7) * c(2:4)` produce? Briefly, why?
+
+### The above multiplication can be broken down to two integer vectors multiplying by each other. (4, 5, 6, 7) * (2, 3, 4) will result in `8 15 24 14` due to recycling because of differing lengths. The 2 will be used to multiply with 7 resulting in 14. In addition to the output, a warning message of the recycling will be displayed. 
+
+7. Take a look at the following code chunks. What are some of the differences between `cat()` and `print()`?
+
+```{r}
+cat(5 + 6)
+print(5 + 6)
+```
+
+```{r}
+x8 <- cat(5 + 6)
+y8 <- print(5 + 6)
+x8
+y8
+```
+
+```{r, error = TRUE}
+cat(letters[1:3], letters[24:26])
+print(letters[1:3], letters[24:26]) # Why are we getting the following error?
+# Error in print.default(letters[1:3], letters[24:26]) : invalid 'digits' argument
+cat(l1)
+print(l1)
+```
+
+### The cat() function concatenates and produces an output without extra information. print() is designed for displaying objects and provides an organized and informational output. x8 returns NULL due to cat() ability to print but not store values whereas y8 returns the previously outputted value because of its ability to print objects printed previously. print() results in an error due to its inabillity to handle multiple arguments whereas cat() is designed for concantenation and will output the multiple arguments placed within the function. Lastly, cat(l1) results in an error because it is not designed to handle additional information that lists contain whereas print() will output the list with it retaining information and values.
+
+
+
+8. What happens to a factor when you reverse its levels?
+
+```{r}
+f1 <- factor(c("A","A","B","C","D","A","C"))
+f1
+levels(f1) <- rev(levels(f1))
+f1
+```
+
+### When the levels are reversed, the original vector does not change. However, the corresponding levels are reversed and take the place of the level beforehand such as "D" corresponding to where the values of "A" were and so forth. "A"(originally 1) becomes "D"(new 1) which is then represented in the factor. So the actual values of the factor are not modified. 
+
+9. How do f2 and f3 differ from the unmodified f1?
+
+```{r}
+f1 <- factor(c("A","A","B","C","D","A","C"))
+f1
+f2 <- factor(rev(c("A","A","B","C","D","A","C")))
+f2
+f3 <- factor(c("A","A","B","C","D","A","C"), levels = rev(c("A","B","C","D")))
+f3
+```
+
+### All three contain the same elements in the vector. f2 reverses the actual factor so the levels remains the same and the mapping of the values remains the same. f3 reverses the levels but not the factor which then results in the elements "A" in the factor mapping to the level "D"
+
+10. What attributes does a data frame possess?
+
+### A data fram can possess multiple attributes consisting of names, row.names, col.names, class, dimensions, and comments. Attributes can be obtained through the use of the attributes() function.
+
+11. What does as.matrix() do when applied to a data frame with columns of different types? Create a simple data.frame with two columns: one numeric and one string. Use as.matrix and show the results.
+
+### When the as.matrix() function is applied to a data frame with different column types, the function attempts to coerce the elements into a common data type. In the case of a numeric data type and and a string type, the matrix will be coerced into the character data type.
+
+```{r}
+df <- data.frame(
+  num_col = c(1, 2, 3),
+  string_col = c("A", "B", "C")
+)
+print(df)
+print(as.matrix(df)) # Coerced into character data type
+```
