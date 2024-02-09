@@ -1,0 +1,236 @@
+---
+title: "Stats 102A - Homework 2 - Output File"
+author: "Daren Sathasivam -- 306229580"
+output: pdf_document
+---
+
+Homework questions and prompts copyright Miles Chen, Do not post, share, or distribute without permission.
+
+To receive full credit the functions you write must pass all tests. We may conduct further tests that are not included on this page as well.
+
+# Academic Integrity Statement
+
+By including this statement, I, **Daren Sathasivam**, declare that all of the work in this assignment is my own original work. At no time did I look at the code of other students nor did I search for code solutions online. I understand that plagiarism on any single part of this assignment will result in a 0 for the entire assignment and that I will be referred to the dean of students.
+
+```{r, error = TRUE}
+source("102a_hw_02_script_Daren_Sathasivam.R")  # edit with your file name
+```
+
+\pagebreak
+
+# Part 1: Board representation
+
+Create a single list object called `board` where you store the features of the game board in R.
+
+```{r, error = TRUE}
+# chutes, ladders, and board_dim are list objects
+board <- list(chutes = chutes <- list(
+  start = c(16, 47, 49, 56, 62, 64, 87, 93, 95, 98),
+  end = c(6, 26, 11, 53, 19, 60, 24, 73, 75, 78)
+), ladders = ladders <- list(
+  start = c(1, 4, 9, 21, 28, 36, 51, 71, 80),
+  end = c(38, 14, 31, 42, 84, 44, 67, 91, 100)
+), dim = board_dim <- list(row = 10, col = 10))
+```
+
+\pagebreak
+
+# Part 2: Plot of Game board
+
+```{r, error = TRUE}
+# par() should help the plot be more visible. you can adjust this as necessary
+board_dim <- list(row = 10, col = 10)
+chutes <- list(
+  start = c(16, 47, 49, 56, 62, 64, 87, 93, 95, 98),
+  end = c(6, 26, 11, 53, 19, 60, 24, 73, 75, 78)
+)
+ladders <- list(
+  start = c(1, 4, 9, 21, 28, 36, 51, 71, 80),
+  end = c(38, 14, 31, 42, 84, 44, 67, 91, 100)
+)
+board <- list(chutes = chutes, ladders = ladders, dim = board_dim)
+par(mar = c(0, 0, 0, 0)) 
+show_board(board)
+```
+
+\pagebreak
+
+# Part 3: Miniboards
+
+Create the `miniboard` objects and plots.
+
+```{r, error = TRUE}
+board_dim1 <- list(row = 7, col = 6)
+ladders1 <- list(start = c(1, 9, 20, 33), end = c(23, 27, 31, 41))
+chutes1 <- list(start = c(16, 30, 35, 40), end = c(6, 18, 24, 26))
+miniboard1 <- list(chutes = chutes1, ladders = ladders1, dim = board_dim1)
+par(mar = c(1, 7, 1, 7))
+show_board(miniboard1)
+```
+
+```{r, error = TRUE}
+board_dim2 <- list(row = 9, col = 7)
+ladders2 <- list(start = c(9, 13, 24, 29, 33, 43), end = c(22, 30, 37, 41, 39, 53))
+chutes2 <- list(start = c(16, 31, 35, 62), end = c(3, 15, 21, 48))
+miniboard2 <- list(chutes = chutes2, ladders = ladders2, dim = board_dim2) 
+par(mar = c(1, 8, 1, 8))
+show_board(miniboard2)
+```
+
+```{r, error = TRUE}
+board_dim3 <- list(row = 9, col = 7)
+ladders3 <- list()
+chutes3 <- list()
+miniboard3 <- list(chutes = chutes3, ladders = ladders3, dim = board_dim3)
+par(mar = c(1, 8, 2, 8))
+show_board(miniboard3)
+```
+
+\pagebreak
+
+# Part 4: Verbose output of one single player game
+
+```{r, error = TRUE}
+set.seed(5)
+play_solo(board, verbose = TRUE)
+```
+
+\pagebreak
+
+# Part 5: Monte Carlo Simulation Study
+
+```{r, error = TRUE}
+# run 10,000 games
+simulation <- replicate(10000, play_solo(board), simplify = FALSE)
+```
+
+-   Create a histogram (breaks = 50) of the turns.
+
+```{r}
+total_turns <- sapply(simulation, function(x){
+  x$turns
+})
+hist(total_turns, breaks = 50, main = "Histogram of turns to complete a game of Chutes and Ladders", xlab = "Turns")
+```
+
+-   Find the minimum number of turns. How many times out of 10,000 did a game finish with the minimum number of turns?
+
+```{r}
+min_turns <- min(total_turns)
+# Minimum number of turns in a game
+min_turns
+# For amount of games that finished with the minimum amount of turns
+sum(total_turns == min_turns)
+```
+
+-   Find the maximum number of turns.
+
+```{r}
+max_turns <- max(total_turns)
+max_turns
+```
+
+-   What is the median number of turns?
+
+```{r}
+median_turns <- median(total_turns)
+median_turns
+```
+
+-   What is the mean number of turns?
+
+```{r}
+mean_turns <- mean(total_turns)
+mean_turns
+```
+
+-   What proportion of games take 100 or more turns to complete?
+
+```{r}
+prop_morethan_100 <- mean(total_turns >= 100)
+prop_morethan_100
+```
+
+-   What proportion of games take 10 or fewer turns to complete?
+
+```{r}
+prop_lessthan_10 <- mean(total_turns <= 10)
+prop_lessthan_10
+```
+
+-   What proportion of games utilize ladder 9 (the shortcut to win on space 80)?
+
+```{r}
+chute_tallies <- tapply(unlist(lapply(simulation, function (x) {
+  x$chute_tally
+})), rep(seq_along(board$chutes$start), times = 10000), sum)
+ladder_tallies <- tapply(unlist(lapply(simulation, function (x) {
+  x$ladder_tally
+})), rep(seq_along(board$ladders$start), times = 10000), sum)
+
+prop_ladder9 <- ladder_tallies[9] / 10000
+prop_ladder9
+```
+
+-   Barplot of the relative frequency of how often each chute is utilized.
+```{r}
+barplot(chute_tallies / 10000, main = "Relative Frequency of Chute Usage", xlab = "Chute Number", ylab = "Frequency", col = "red")
+```
+
+-   Barplot of the relative frequency of how often each ladder is utilized.
+```{r}
+barplot(ladder_tallies / 10000, main = "Relative Frequncy of Ladder Usage", xlab = "Ladder Number", ylab = "Frequency", col = "green")
+```
+
+\pagebreak
+
+# Extra Credit Challenge
+Pages to keep note of: \
+* https://r4ds.had.co.nz/data-visualisation.html \
+* https://r-charts.com/correlation/heat-map-ggplot2/ \
+* https://datacarpentry.org/R-ecology-lesson/04-visualization-ggplot2.html \
+* https://stats.stackexchange.com/questions/26722/calculate-transition-matrix-markov-in-r \
+* https://www.datacamp.com/tutorial/markov-chain-analysis-r \
+* https://ggplot2.tidyverse.org/reference/aes.html \
+```{r}
+library(ggplot2)
+
+roll1 <- matrix(0, nrow = 100, ncol = 100)
+# Find chute or ladder end --> find_special from part 5
+special_end <- function(pos, board) {
+  if (pos %in% board$chutes$start) {
+    return(board$chutes$end[which(board$chutes$start == pos)])
+  } else if (pos %in% board$ladders$start) {
+      return(board$ladders$end[which(board$ladders$start == pos)])
+  } else {
+    return(pos)
+  }
+}
+# Fill in the matrix
+for (start in 1:100) {
+  for (roll in 1:6) {
+    end <- min(start + roll, 100)
+    end <- special_end(end, board)
+    roll1[start, end] <- roll1[start, end] + (1 / 6)
+  }
+}
+# Calculate roll 2 and 3
+roll2 <- roll1 %*% roll1
+roll3 <- roll2 %*% roll1
+# Create the heat map
+plot_heat_map <- function(transition_mat, title) {
+  transition_df <- as.data.frame(as.table(transition_mat))
+  # Plot df
+  ggplot(transition_df, aes(Var1, Var2, fill = Freq)) +
+    geom_tile() + 
+    scale_fill_gradient(low = "yellow", high = "red") +
+    labs(title = title, x = "Start Position", y = "End Position")
+}
+# Plot heat maps on rolls
+par(mfrow = c(1, 3))
+plot_heat_map(roll1, "Heat Map After 1 Roll")
+plot_heat_map(roll2, "Heat Map After 2 Rolls")
+plot_heat_map(roll3, "Heat Map After 3 Rolls")
+
+```
+
