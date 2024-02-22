@@ -1,0 +1,232 @@
+---
+title: "Stats 102A - Homework 4 - Output File"
+author: "Daren Sathasivam -- UID: 306229580"
+output: pdf_document
+---
+
+Homework questions and prompts copyright Miles Chen, Do not post, share, or distribute without permission.
+
+# Academic Integrity Statement
+
+By including this statement, I, Daren Sathasivam, declare that all of the work in this assignment is my own original work. At no time did I look at the code of other students nor did I search for code solutions online. I understand that plagiarism on any single part of this assignment will result in a 0 for the entire assignment and that I will be referred to the dean of students.
+
+```{r, error = TRUE}
+# source("solutions.R")  # edit with your file name
+source("102a_hw_04_script_Daren_Sathasivam.R")  # edit with your file name
+print(Player)
+print(take_turn)
+```
+
+\pagebreak
+
+# Part 1: Test Cases
+
+## do not alter the code for the test cases
+
+### Test Case 1: Space: Go to Jail
+
+```{r, error = TRUE}
+dice <- PresetDice$new(
+  rolls = c(3,4),
+  verbose = TRUE
+)
+set.seed(16)
+player1 <- Player$new(verbose = TRUE, pos = 24)
+monopoly <- SpaceTracker$new(verbose = TRUE)
+
+for (i in 1:1) {
+  cat("--- Turn", i,"---\n")
+  take_turn(player1, monopoly)
+  cat("\n")
+}
+
+print(setNames(monopoly$counts, 1:40))
+```
+
+\pagebreak
+
+### Test Case 2: Chance Card and Doubles Tests: Advance to Go, Reading Railroad, Nearest Railroad, Nearest Utility, No Movement
+
+```{r, error = TRUE}
+dice <- PresetDice$new(
+  rolls = c(3,4, 4,3, 1,1, 3,4, 5,3),
+  verbose = TRUE
+)
+set.seed(135)
+chance <- CardDeck$new(chancedeck, verbose = TRUE)
+community <- CardDeck$new(communitydeck, verbose = TRUE)
+player1 <- Player$new(verbose = TRUE)
+monopoly <- SpaceTracker$new(verbose = TRUE)
+
+for (i in 1:4) {
+  cat("--- Turn", i,"---\n")
+  take_turn(player1, monopoly)
+  cat("\n")
+}
+
+print(setNames(monopoly$counts, 1:40))
+```
+\pagebreak
+
+### Test Case 3: Multiple doubles. Community Chest.
+```{r, error = TRUE}
+dice <- PresetDice$new(
+  rolls = c(3,3, 2,2, 2,1, 3,1), verbose = TRUE)
+
+player1 <- Player$new(verbose = TRUE)
+monopoly <- SpaceTracker$new(verbose = TRUE)
+for (i in 1:2) {
+  cat("--- Turn", i,"---\n")
+  take_turn(player1, monopoly)
+  cat("\n")
+}
+
+print(setNames(monopoly$counts, 1:40))
+```
+
+\pagebreak
+
+### Test Case 4: Doubles three times. Three turns in jail.
+```{r, error = TRUE}
+dice <- PresetDice$new(
+  rolls = c(3,3, 3,3, 3,3, 5,6, 5,6, 5,6),
+  verbose = TRUE
+)
+
+player1 <- Player$new(verbose = TRUE)
+monopoly <- SpaceTracker$new(verbose = TRUE)
+
+for (i in 1:4) {
+  cat("--- Turn", i,"---\n")
+  take_turn(player1, monopoly)
+  cat("\n")
+}
+
+print(setNames(monopoly$counts, 1:40))
+```
+
+\pagebreak
+
+### Test Case 5: After going to Jail, player's turn ends immediately. Rolling doubles while in Jail gets player out of jail.
+```{r, error = TRUE}
+dice <- PresetDice$new(
+  rolls = c(3,3, 1,2, 3,3, 3,4),
+  verbose = TRUE
+)
+
+player1 <- Player$new(verbose = TRUE, pos = 25)
+monopoly <- SpaceTracker$new(verbose = TRUE)
+
+for (i in 1:3) {
+  cat("--- Turn", i,"---\n")
+  take_turn(player1, monopoly)
+  cat("\n")
+}
+
+print(setNames(monopoly$counts, 1:40))
+```
+
+\pagebreak
+
+### Test Case 6: 20 Predetermined Turns
+
+```{r, error = TRUE}
+## You must use these dice for Part 1
+dice <- PresetDice$new(
+  rolls = c(6,4, 5,3, 3,5, 4,4, 4,4, 2,2, 4,3, 4,4, 1,4,
+            3,4, 1,2, 3,6, 5,4, 5,5, 1,2, 5,4, 3,3, 6,1,
+            1,1, 2,3, 5,5, 5,4, 4,1, 2,2, 2,4),
+  verbose = TRUE
+)
+set.seed(2)
+chance <- CardDeck$new(chancedeck, verbose = TRUE)
+community <- CardDeck$new(communitydeck, verbose = TRUE)
+# if your chance cards different from mine,
+# check to make sure sample(15) returns the following
+# > set.seed(2)
+# > sample(15)
+#  [1]  5  6 14  8  1 11  9  2  3 10  7 12  4 13 15
+```
+
+
+```{r, error = TRUE}
+player1 <- Player$new(verbose = TRUE)
+monopoly <- SpaceTracker$new(verbose = TRUE)
+
+for (i in 1:20) {
+  cat("--- Turn", i,"---\n")
+  take_turn(player1, monopoly)
+  cat("\n")
+}
+
+monopoly$counts
+cbind(gameboard, counts = monopoly$counts)
+```
+
+
+# Part 2: 1000 simulated games
+```{r, message = FALSE}
+library(dplyr)
+```
+
+
+```{r, error = TRUE}
+## Use non-verbose random dice for Part 2
+set.seed(2)
+chance <- CardDeck$new(chancedeck, verbose = FALSE)
+community <- CardDeck$new(communitydeck, verbose = FALSE)
+dice <- RandomDice$new()
+
+player1 <- Player$new(verbose = FALSE)
+player2 <- Player$new(verbose = FALSE)
+monopoly <- SpaceTracker$new(verbose = FALSE)
+
+for (g in 1:1000) {
+  if (g %% 100 == 0) {
+    cat("#### SIMULATING GAME", g, "##### \n")
+  }
+  for (i in 1:150) {
+    take_turn(player1, monopoly)
+    take_turn(player2, monopoly)
+  }
+}
+
+print(setNames(monopoly$counts, 1:40))
+
+results <- cbind(gameboard, tally = monopoly$counts)
+results <- cbind(results, rel = monopoly$counts/sum(monopoly$counts))
+arrange(results, desc(tally))
+print(results)
+
+```
+
+
+```{r}
+# set colors for the bar plot
+color_vec <- rep(NA, 40)
+color_vec[c(2,4)] <- "chocolate4" # mediterranean, baltic
+color_vec[c(7,9,10)] <- "lightskyblue" # oriental, vermont, connecticut 
+color_vec[c(12,14,15)] <- "darkorchid2" # st charles, states, virgina
+color_vec[c(17,19,20)] <- "darkorange" # st james, tennessee, new york
+color_vec[c(22,24,25)] <- "red2" # kentucky, indiana, illinois
+color_vec[c(27,28,30)] <- "gold1" # atlantic, ventnor, marvin
+color_vec[c(32,33,35)] <- "darkgreen" # pacific, n. carolina, pennsylvania
+color_vec[c(38,40)] <- "blue3" # park place, boardwalk
+color_vec[c(6,16,26,36)] <- "gray14" # railroads
+color_vec[c(13,29)] <- "palegreen1" # utilities
+color_vec[c(8,23,37)] <- "salmon2" # chance
+color_vec[c(3,18,34)] <- "deepskyblue" # community chest 
+
+barplot(monopoly$counts, 
+  main = "Barplot of Frequency of Landing for Each Space",
+  xlab = "Space Number", ylab = "Number of Landings",
+  las = 2, col = color_vec, names.arg = 1:40, cex.names = 0.65)
+
+# this one sets the y-limits so the max count of jail doesn't shrink everything
+barplot(monopoly$counts, 
+  main = "Barplot of Frequency of Landing for Each Space",
+  xlab = "Space Number", ylab = "Number of Landings",
+  las = 2, col = color_vec, names.arg = 1:40, cex.names = 0.65,
+  ylim = c(0, sort(monopoly$counts, decreasing = TRUE)[2]))
+```
+
