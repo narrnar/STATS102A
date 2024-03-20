@@ -1,0 +1,118 @@
+---
+title: "Stats 102A - Homework 6 - Output File"
+author: "Miles Chen (example)"
+output: pdf_document
+---
+
+Homework questions and prompts copyright Miles Chen, Do not post, share, or distribute without permission.
+
+# Academic Integrity Statement
+
+By including this statement, I, **Joe Bruin**, declare that all of the work in this assignment is my own original work. At no time did I look at the code of other students nor did I search for code solutions online. I understand that plagiarism on any single part of this assignment will result in a 0 for the entire assignment and that I will be referred to the dean of students.
+
+I did discuss ideas related to the homework with **Josephine Bruin** for parts 2 and 3, with **John Wooden** for part 2, and with **Gene Block** for part 5. At no point did I show another student my code, nor did I look at another student's code.
+
+
+# Part 1
+
+### Explain what a p-value is and how a researcher should use it. (150 words or less)
+
+
+# Part 2
+
+## Randomization test for numeric data
+
+```{r}
+# Data credit: David C. Howell
+# `no_waiting` is a vector that records the time it took a driver to leave the 
+# parking spot if no one was waiting for the driver
+no_waiting <- c(36.30, 42.07, 39.97, 39.33, 33.76, 33.91, 39.65, 84.92, 40.70, 39.65,
+39.48, 35.38, 75.07, 36.46, 38.73, 33.88, 34.39, 60.52, 53.63, 50.62)
+
+# `waiting` is a vector that records the time it takes a driver to leave if
+# someone was waiting on the driver
+waiting <- c(49.48, 43.30, 85.97, 46.92, 49.18, 79.30, 47.35, 46.52, 59.68, 42.89,
+49.29, 68.69, 41.61, 46.81, 43.75, 46.55, 42.33, 71.48, 78.95, 42.06)
+
+mean(waiting)
+mean(no_waiting)
+obs_dif <- mean(waiting) - mean(no_waiting)
+```
+
+### Randomization test
+
+Conduct a randomization test
+
+
+### Comparison to traditional t-test
+
+Conduct a traditional two-sample independent t-test.
+
+
+# Part 3
+
+## Another Randomization test for numeric data
+
+### Exploratory Analysis
+
+Carry out an exploratory analysis.
+
+### Randomization Test
+
+Use the randomization test.
+
+# Part 4
+
+### Randomization test
+
+Perform a randomization test
+
+
+### Comparison to Fisher's Exact Test
+
+Use R's `fisher.test()` 
+
+
+# Part 5
+
+## _Comparing Groups, Chapter 7, Exercise 7.1_
+
+### Non-parametric bootstrap test
+
+Use a non-parametric bootstrap test
+
+### Parametric bootstrap test
+
+Use a parametric bootstrap test
+
+# Part 6
+
+```{r}
+light <- c(28, 26, 33, 24, 34,-44, 27, 16, 40, -2, 29, 22, 24, 21, 25, 30, 23, 29, 31, 19,
+           24, 20, 36, 32, 36, 28, 25, 21, 28, 29, 37, 25, 28, 26, 30, 32, 36, 26, 30, 22, 
+           36, 23, 27, 27, 28, 27, 31, 27, 26, 33, 26, 32, 32, 24, 39, 28, 24, 25, 32, 25, 
+           29, 27, 28, 29, 16, 23)
+```
+
+### Non-parametric bootstrap test
+
+Perform a bootstrap test
+
+
+### Non-parametric bootstrap test with outliers removed
+
+Perform the bootstrap test again after removing the two negative outliers (-2, and -44) 
+
+```{r}
+
+```
+
+
+Explain why the p-value is even smaller.
+
+
+
+
+
+
+
